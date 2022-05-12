@@ -50,3 +50,35 @@ $ ./bin/grafana-server web
 
 ![image-20220228170745504](images/image-20220228170745504.png)
 
+默认账号密码是 admin/admin，登录进去是这样的：
+
+![image-20220426151535354](images/image-20220426151535354.png)
+
+#### 添加数据源
+
+![image-20220426152215355](images/image-20220426152215355.png)
+
+选择 Prometheus
+
+![image-20220428094024050](images/image-20220428094024050.png)
+
+添加地址，点击 Save，有绿色 Working 框弹出说明添加成功
+
+![image-20220428094935516](images/image-20220428094935516.png)
+
+![image-20220428110021248](images/image-20220428110021248.png)
+
+点击 Back 后显示数据源列表
+
+![image-20220428110400093](images/image-20220428110400093.png)
+
+
+
+
+
+
+
+
+
+
+
