@@ -1,4 +1,4 @@
-### 设置
+### Jupyter 撤消选定单元格中内容
 
 进入 Jupyter 界面，点击 Settings 下的 Advanced Settings Editor 进入设置界面。
 
