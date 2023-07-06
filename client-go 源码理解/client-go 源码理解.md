@@ -35,14 +35,12 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-// NamespacesGetter has a method to return a NamespaceInterface.
-// A group's client should implement this interface.
-// 定义获取 namespace 对象的接口，namespace 属于 core 组，所以 core_client 负责实现这个 Namespaces() 方法，方法返回 namespace 对象的所有操作方法
+// 定义获取 namespace 对象的接口，namespace 属于 core 组，所以 core_client 负责实现这个 Namespaces() 方法
+// 方法返回 namespace 对象的所有操作方法
 type NamespacesGetter interface {
 	Namespaces() NamespaceInterface
 }
 
-// NamespaceInterface has methods to work with Namespace resources.
 // 定义 Namespace 对象的所有操作方法
 type NamespaceInterface interface {
 	Create(ctx context.Context, namespace *v1.Namespace, opts metav1.CreateOptions) (*v1.Namespace, error)
@@ -58,13 +56,11 @@ type NamespaceInterface interface {
 	NamespaceExpansion
 }
 
-// namespaces implements NamespaceInterface
 // 定义 namespace 对象，拥有属性 client，类型为 rest.Interface
 type namespaces struct {
 	client rest.Interface
 }
 
-// newNamespaces returns a Namespaces
 // namespace 属于 core 组，为 CoreV1Client 添加 newNamespaces 方法，用来返回 namespace 对象。
 // 然后 CoreV1Client 再实现外部可调用的 Namespaces() 方法调用内部方法 newNamespaces() 返回 namespace 对象，如下：
 // func (c *CoreV1Client) Namespaces() NamespaceInterface {
@@ -77,7 +73,6 @@ func newNamespaces(c *CoreV1Client) *namespaces {
 }
 
 // 下面是 namespace 对象所有方法的代码实现
-// Get takes name of the namespace, and returns the corresponding namespace object, and an error if there is any.
 func (c *namespaces) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.Namespace, err error) {
 	result = &v1.Namespace{}
 	err = c.client.Get().
@@ -89,7 +84,6 @@ func (c *namespaces) Get(ctx context.Context, name string, options metav1.GetOpt
 	return
 }
 
-// List takes label and field selectors, and returns the list of Namespaces that match those selectors.
 func (c *namespaces) List(ctx context.Context, opts metav1.ListOptions) (result *v1.NamespaceList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
@@ -105,7 +99,6 @@ func (c *namespaces) List(ctx context.Context, opts metav1.ListOptions) (result 
 	return
 }
 
-// Watch returns a watch.Interface that watches the requested namespaces.
 func (c *namespaces) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
@@ -119,7 +112,6 @@ func (c *namespaces) Watch(ctx context.Context, opts metav1.ListOptions) (watch.
 		Watch(ctx)
 }
 
-// Create takes the representation of a namespace and creates it.  Returns the server's representation of the namespace, and an error, if there is any.
 func (c *namespaces) Create(ctx context.Context, namespace *v1.Namespace, opts metav1.CreateOptions) (result *v1.Namespace, err error) {
 	result = &v1.Namespace{}
 	err = c.client.Post().
@@ -131,7 +123,6 @@ func (c *namespaces) Create(ctx context.Context, namespace *v1.Namespace, opts m
 	return
 }
 
-// Update takes the representation of a namespace and updates it. Returns the server's representation of the namespace, and an error, if there is any.
 func (c *namespaces) Update(ctx context.Context, namespace *v1.Namespace, opts metav1.UpdateOptions) (result *v1.Namespace, err error) {
 	result = &v1.Namespace{}
 	err = c.client.Put().
@@ -144,8 +135,6 @@ func (c *namespaces) Update(ctx context.Context, namespace *v1.Namespace, opts m
 	return
 }
 
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
 func (c *namespaces) UpdateStatus(ctx context.Context, namespace *v1.Namespace, opts metav1.UpdateOptions) (result *v1.Namespace, err error) {
 	result = &v1.Namespace{}
 	err = c.client.Put().
@@ -159,7 +148,6 @@ func (c *namespaces) UpdateStatus(ctx context.Context, namespace *v1.Namespace, 
 	return
 }
 
-// Delete takes name of the namespace and deletes it. Returns an error if one occurs.
 func (c *namespaces) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	return c.client.Delete().
 		Resource("namespaces").
@@ -169,7 +157,6 @@ func (c *namespaces) Delete(ctx context.Context, name string, opts metav1.Delete
 		Error()
 }
 
-// Patch applies the patch and returns the patched namespace.
 func (c *namespaces) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.Namespace, err error) {
 	result = &v1.Namespace{}
 	err = c.client.Patch(pt).
@@ -183,7 +170,6 @@ func (c *namespaces) Patch(ctx context.Context, name string, pt types.PatchType,
 	return
 }
 
-// Apply takes the given apply declarative configuration, applies it and returns the applied namespace.
 func (c *namespaces) Apply(ctx context.Context, namespace *corev1.NamespaceApplyConfiguration, opts metav1.ApplyOptions) (result *v1.Namespace, err error) {
 	if namespace == nil {
 		return nil, fmt.Errorf("namespace provided to Apply must not be nil")
@@ -208,8 +194,6 @@ func (c *namespaces) Apply(ctx context.Context, namespace *corev1.NamespaceApply
 	return
 }
 
-// ApplyStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
 func (c *namespaces) ApplyStatus(ctx context.Context, namespace *corev1.NamespaceApplyConfiguration, opts metav1.ApplyOptions) (result *v1.Namespace, err error) {
 	if namespace == nil {
 		return nil, fmt.Errorf("namespace provided to Apply must not be nil")
@@ -255,13 +239,13 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-// 定义 core 组所有方法的接口，在 kubernetes 模块的总入口，也就是所有组的集合定义处会调用，继承 NamespacesGetter，目的是调用 Namespaces() 方法返回 namespace 对象的所有操作方法
+// 定义 core 组所有方法的接口，在 kubernetes 模块的总入口，也就是所有组的集合定义处会调用
+// 继承 NamespacesGetter，目的是调用 Namespaces() 方法返回 namespace 对象的所有操作方法
 type CoreV1Interface interface {
 	RESTClient() rest.Interface
 	NamespacesGetter
 }
 
-// CoreV1Client is used to interact with features provided by the  group.
 // 定义 core 组的组 client
 type CoreV1Client struct {
 	restClient rest.Interface
@@ -272,9 +256,6 @@ func (c *CoreV1Client) Namespaces() NamespaceInterface {
 	return newNamespaces(c)
 }
 
-// NewForConfig creates a new CoreV1Client for the given config.
-// NewForConfig is equivalent to NewForConfigAndClient(c, httpClient),
-// where httpClient was generated with rest.HTTPClientFor(c).
 // 根据配置文件创建 core client
 func NewForConfig(c *rest.Config) (*CoreV1Client, error) {
 	config := *c
@@ -291,8 +272,6 @@ func NewForConfig(c *rest.Config) (*CoreV1Client, error) {
 	return NewForConfigAndClient(&config, httpClient)
 }
 
-// NewForConfigAndClient creates a new CoreV1Client for the given config and http client.
-// Note the http client provided takes precedence over the configured transport values.
 // 返回 CoreV1Client
 func NewForConfigAndClient(c *rest.Config, h *http.Client) (*CoreV1Client, error) {
 	config := *c
@@ -306,8 +285,6 @@ func NewForConfigAndClient(c *rest.Config, h *http.Client) (*CoreV1Client, error
 	return &CoreV1Client{client}, nil
 }
 
-// NewForConfigOrDie creates a new CoreV1Client for the given config and
-// panics if there is an error in the config.
 func NewForConfigOrDie(c *rest.Config) *CoreV1Client {
 	client, err := NewForConfig(c)
 	if err != nil {
@@ -316,7 +293,6 @@ func NewForConfigOrDie(c *rest.Config) *CoreV1Client {
 	return client
 }
 
-// New creates a new CoreV1Client for the given RESTClient.
 // 创建新的 CoreV1Client
 func New(c rest.Interface) *CoreV1Client {
 	return &CoreV1Client{c}
@@ -335,8 +311,6 @@ func setConfigDefaults(config *rest.Config) error {
 	return nil
 }
 
-// RESTClient returns a RESTClient that is used to communicate
-// with API server by this client implementation.
 func (c *CoreV1Client) RESTClient() rest.Interface {
 	if c == nil {
 		return nil
@@ -368,15 +342,12 @@ type Interface interface {
 	CoreV1() corev1.CoreV1Interface
 }
 
-// Clientset contains the clients for groups. Each group has exactly one
-// version included in a Clientset.
 // 定义 kubernetes client 为 Clientset，主要分析 coreV1，类型为 corev1.CoreV1Client
 type Clientset struct {
 	*discovery.DiscoveryClient
 	coreV1                       *corev1.CoreV1Client
 }
 
-// CoreV1 retrieves the CoreV1Client
 // 定义 CoreV1()，返回属性 coreV1
 func (c *Clientset) CoreV1() corev1.CoreV1Interface {
 	return c.coreV1
@@ -390,7 +361,6 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 		configShallowCopy.UserAgent = rest.DefaultKubernetesUserAgent()
 	}
 
-	// share the transport between all clients
 	httpClient, err := rest.HTTPClientFor(&configShallowCopy)
 	if err != nil {
 		return nil, err
@@ -419,8 +389,6 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 	return &cs, nil
 }
 
-// NewForConfigOrDie creates a new Clientset for the given config and
-// panics if there is an error in the config.
 func NewForConfigOrDie(c *rest.Config) *Clientset {
 	cs, err := NewForConfig(c)
 	if err != nil {
@@ -429,7 +397,6 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 	return cs
 }
 
-// New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
 	cs.coreV1 = corev1.New(c)
