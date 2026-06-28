@@ -15,7 +15,7 @@
 为接下来的安装设置代理
 
 ```shell
-hostip=172.20.80.1
+hostip=`cat /etc/resolv.conf | grep nameserver | awk '{ print $2 }'`
 port=1080
 export http_proxy="http://${hostip}:${port}"
 export https_proxy="http://${hostip}:${port}"
